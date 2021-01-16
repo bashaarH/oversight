@@ -146,8 +146,7 @@ def get_google_calendar_events():
     # The file token.pickle stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
     # time.
-    
-    with open('manager/token.pickle', 'rb') as token:
+    with open(r'C:\Users\Bashaar\Documents\north\powercell\manager\token.pickle', 'rb') as token:
         creds = pickle.load(token)
     # If there are no (valid) credentials available, let the user log in.
     if not creds or not creds.valid:
@@ -155,10 +154,10 @@ def get_google_calendar_events():
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(
-                'manager/credentials.json', SCOPES)
+                'credentials.json', SCOPES)
             creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
-        with open('manager/token.pickle', 'wb') as token:
+        with open('token.pickle', 'wb') as token:
             pickle.dump(creds, token)
 
     service = build('calendar', 'v3', credentials=creds)
@@ -176,10 +175,12 @@ def get_google_calendar_events():
     if not events:
         print('No upcoming events found.')
     for event in events:
-        start = event['start'].get('dateTime', event['start'].get('date'))
-        upcoming.append((event['summary'], datetime.datetime.strptime(event['start']['dateTime'][:19], '%Y-%m-%dT%H:%M:%S'), datetime.datetime.strptime(event['end']['dateTime'][:19], '%Y-%m-%dT%H:%M:%S')))
+        try:
+            upcoming.append((event['summary'], datetime.datetime.strptime(event['start']['dateTime'][:19], '%Y-%m-%dT%H:%M:%S'), datetime.datetime.strptime(event['end']['dateTime'][:19], '%Y-%m-%dT%H:%M:%S'), random.choice(["blue", "red", "green"]), True))
+        except KeyError:
+            upcoming.append((event['summary'], datetime.datetime.strptime(event['start']['date'], '%Y-%m-%d'), datetime.datetime.strptime(event['end']['date'], '%Y-%m-%d'), random.choice(["blue", "red", "green"]), False))
 
-    return (upcoming)
+    return(upcoming)
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
