@@ -178,7 +178,7 @@ def get_google_calendar_events():
         try:
             upcoming.append((event['summary'], datetime.datetime.strptime(event['start']['dateTime'][:19], '%Y-%m-%dT%H:%M:%S'), datetime.datetime.strptime(event['end']['dateTime'][:19], '%Y-%m-%dT%H:%M:%S'), random.choice(["blue", "red", "green"]), True))
         except KeyError:
-            upcoming.append((event['summary'], datetime.datetime.strptime(event['start']['date'], '%Y-%m-%d'), datetime.datetime.strptime(event['end']['date'], '%Y-%m-%d'), random.choice(["blue", "red", "green"]), False))
+            upcoming.append((event['summary'], datetime.datetime.strptime(event['start']['date'], '%Y-%m-%d'), datetime.datetime.strptime(event['end']['date'], '%Y-%m-%d')-datetime.timedelta(days=1), random.choice(["blue", "red", "green"]), False))
 
     return(upcoming)
 
@@ -215,7 +215,7 @@ def get_outlook_calendar_events():
             try:
                 upcoming.append((event['summary'], datetime.datetime.strptime(event['start'][:19], '%Y-%m-%dT%H:%M:%S'), datetime.datetime.strptime(event['end'][:19], '%Y-%m-%dT%H:%M:%S'), random.choice(["blue", "red", "green"]), True))
             except ValueError:
-                upcoming.append((event['summary'], datetime.datetime.strptime(event['start'][:19], '%Y-%m-%d'), datetime.datetime.strptime(event['end'][:19], '%Y-%m-%d'), random.choice(["blue", "red", "green"]), False))
+                upcoming.append((event['summary'], datetime.datetime.strptime(event['start'][:19], '%Y-%m-%d'), datetime.datetime.strptime(event['end'][:19], '%Y-%m-%d')-datetime.timedelta(days=1), random.choice(["blue", "red", "green"]), False))
     return(upcoming)
 
 
