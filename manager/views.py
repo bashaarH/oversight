@@ -146,7 +146,7 @@ def get_google_calendar_events():
     # The file token.pickle stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
     # time.
-    with open(r'C:\Users\Bashaar\Documents\north\powercell\manager\token.pickle', 'rb') as token:
+    with open('manager\token.pickle', 'rb') as token:
         creds = pickle.load(token)
     # If there are no (valid) credentials available, let the user log in.
     if not creds or not creds.valid:
