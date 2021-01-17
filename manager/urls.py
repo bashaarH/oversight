@@ -18,6 +18,7 @@ urlpatterns = [
     path('updatework/', views.update_work_tasks),
     path('addmeeting/', views.add_meeting),
     path('getmeeting/', views.get_meeting),
+    path('deletemeeting/', views.get_meeting),
     path('addreminder/', views.add_reminder),
     path('getreminder/', views.get_reminder),
 ]

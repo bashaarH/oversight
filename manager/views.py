@@ -18,6 +18,9 @@ import datetime
 import pycronofy
 from opentok import OpenTok
 import random
+from django.http import HttpResponse
+from django.template import loader
+
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
 
@@ -242,15 +245,28 @@ def add_meeting(request):
     return Response(meeting.values())
 
 
-@api_view(['GET'])
-@permission_classes([AllowAny])
 def get_meeting(request):
     meetings = Meeting.objects.all()
     output = []
     for m in meetings:
         output.append(m.values())
 
-    return Response(output)
+    session = meetings[0].session_id
+    token = meetings[0].token
+    data = {'session':session, 'token':token}
+
+    template = loader.get_template('C:/Users/Bashaar/Documents/north/powercell/manager/templates/index.html')
+
+    return HttpResponse(template.render(data, request))
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def delete_meeting(request):
+    data = request.data
+    meeting = Meeting.objects.filter(name = data['name'][0])
+    meeting.delete()
+    return Response(meeting)
 
 
 @api_view(['POST'])
