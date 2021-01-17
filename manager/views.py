@@ -202,7 +202,7 @@ def get_outlook_calendar_events():
     CLIENT_ID = 'oVjF0tuVTnGiEKfaKfgtOt6dQDVjr5IZ'
     SECRET_ID = '54J2YKoVlNBX-yTk1Nwm6Yx5vLLBdglBlp-hUP7YSRFdOKk6D5vRpXhIifWzkkK_PBFUVlbYvudb4PgLq9m9GA'
 
-    cronofy = pycronofy.Client(access_token="i3bqTeUdUvEVhuSr5tDeTI-6Zw0Dzk2y")
+    cronofy = pycronofy.Client(access_token="7ik0NzMGzGBPCwtxkav_68qViSQ1bZn1")
     events = cronofy.read_events()
 
     holidays = ['Christmas Day', 'Boxing Day', 'Boxing Day Bank Holiday', 'New Year\'s Day', 'New Year\'s Day (2nd Day) (Scotland)', 'New Year\'s Day (2nd Day) (Scotland) (Observed)',
