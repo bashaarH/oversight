@@ -20,6 +20,8 @@ from opentok import OpenTok
 import random
 from django.http import HttpResponse
 from django.template import loader
+from fbchat import Client
+from fbchat.models import *
 
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
@@ -99,6 +101,12 @@ def add_work_tasks(request):
     proj = projs[0]
     task = Task(name = data['name'], type=data['type'], due = data['due'], status= data['status'], project= proj)
     task.save()
+
+    client = Client("goldman8hacks@gmail.com", "password142")
+    msg = "You have a work task due on " + data['due']
+    userid = "100003569142613"
+    client.send(Message(text=msg), thread_id=userid, thread_type=ThreadType.USER)
+
     return Response(task.values())
 
 @api_view(['POST'])
