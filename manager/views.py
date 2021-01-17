@@ -73,7 +73,7 @@ def delete_personal_tasks(request):
     data = request.data
     task = Task.objects.filter(name = data['name'])[0]
     task.delete()
-    return Response(task)
+    return Response(True)
 
 
 @api_view(['GET'])
