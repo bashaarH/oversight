@@ -101,13 +101,14 @@ def add_work_tasks(request):
     proj = projs[0]
     task = Task(name = data['name'], type=data['type'], due = data['due'], status= data['status'], project= proj)
     task.save()
-
+    print('xxx')
     client = Client("goldman8hacks@gmail.com", "password142")
+    print('yyyy')
     msg = "You have a work task due on " + data['due']
     userid = "100003569142613"
-    client.send(Message(text=msg), thread_id=userid, thread_type=ThreadType.USER)
+    w = client.send(Message(text=msg), thread_id=userid, thread_type=ThreadType.USER)
 
-    return Response(task.values())
+    return Response(w)
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -213,7 +214,7 @@ def get_outlook_calendar_events():
     CLIENT_ID = 'oVjF0tuVTnGiEKfaKfgtOt6dQDVjr5IZ'
     SECRET_ID = '54J2YKoVlNBX-yTk1Nwm6Yx5vLLBdglBlp-hUP7YSRFdOKk6D5vRpXhIifWzkkK_PBFUVlbYvudb4PgLq9m9GA'
 
-    cronofy = pycronofy.Client(access_token="bKLA1RKxbTm-ctHvhYovOx9clQVWw793")
+    cronofy = pycronofy.Client(access_token="cF-JVep9yCEUk3jxDNDi1rFzedvxXXsj")
     events = cronofy.read_events()
 
     holidays = ['Christmas Day', 'Boxing Day', 'Boxing Day Bank Holiday', 'New Year\'s Day', 'New Year\'s Day (2nd Day) (Scotland)', 'New Year\'s Day (2nd Day) (Scotland) (Observed)',
