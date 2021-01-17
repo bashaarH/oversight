@@ -17,6 +17,7 @@ from google.auth.transport.requests import Request
 import datetime
 import pycronofy
 from opentok import OpenTok
+import random
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
 
@@ -146,19 +147,18 @@ def get_google_calendar_events():
     # The file token.pickle stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
     # time.
-    if os.path.exists('token.pickle'):
-        with open('token.pickle', 'rb') as token:
-            creds = pickle.load(token)
+    with open('manager/token.pickle', 'rb') as token:
+        creds = pickle.load(token)
     # If there are no (valid) credentials available, let the user log in.
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(
-                r'manager\credentials.json', SCOPES)
+                'credentials.json', SCOPES)
             creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
-        with open(r'manager\token.pickle', 'wb') as token:
+        with open('token.pickle', 'wb') as token:
             pickle.dump(creds, token)
 
     service = build('calendar', 'v3', credentials=creds)
@@ -176,10 +176,12 @@ def get_google_calendar_events():
     if not events:
         print('No upcoming events found.')
     for event in events:
-        start = event['start'].get('dateTime', event['start'].get('date'))
-        upcoming.append((event['summary'], datetime.datetime.strptime(event['start']['dateTime'][:19], '%Y-%m-%dT%H:%M:%S'), datetime.datetime.strptime(event['end']['dateTime'][:19], '%Y-%m-%dT%H:%M:%S')))
+        try:
+            upcoming.append((event['summary'], datetime.datetime.strptime(event['start']['dateTime'][:19], '%Y-%m-%dT%H:%M:%S'), datetime.datetime.strptime(event['end']['dateTime'][:19], '%Y-%m-%dT%H:%M:%S'), random.choice(["blue", "red", "green"]), True))
+        except KeyError:
+            upcoming.append((event['summary'], datetime.datetime.strptime(event['start']['date'], '%Y-%m-%d'), datetime.datetime.strptime(event['end']['date'], '%Y-%m-%d')-datetime.timedelta(days=1), random.choice(["blue", "red", "green"]), False))
 
-    return (upcoming)
+    return(upcoming)
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
@@ -211,9 +213,11 @@ def get_outlook_calendar_events():
 
     for event in events.all():
         if event['summary'] not in holidays:
-            upcoming.append((event['summary'], datetime.datetime.strptime(event['start'][:19], '%Y-%m-%dT%H:%M:%S'), datetime.datetime.strptime(event['end'][:19], '%Y-%m-%dT%H:%M:%S')))
-
-    return (upcoming)
+            try:
+                upcoming.append((event['summary'], datetime.datetime.strptime(event['start'][:19], '%Y-%m-%dT%H:%M:%S'), datetime.datetime.strptime(event['end'][:19], '%Y-%m-%dT%H:%M:%S'), random.choice(["blue", "red", "green"]), True))
+            except ValueError:
+                upcoming.append((event['summary'], datetime.datetime.strptime(event['start'][:19], '%Y-%m-%d'), datetime.datetime.strptime(event['end'][:19], '%Y-%m-%d')-datetime.timedelta(days=1), random.choice(["blue", "red", "green"]), False))
+    return(upcoming)
 
 
 
