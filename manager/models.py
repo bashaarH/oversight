@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
 
@@ -47,3 +48,27 @@ class SelectField(models.Model):
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
     value = models.CharField(max_length= 500)
 
+
+
+class Meeting(models.Model):
+    name = models.CharField(max_length=150)
+    session_id = models.CharField(max_length=150)
+    token = models.CharField(max_length=800)
+    start_date = models.CharField(max_length=200)
+    end_date = models.CharField(max_length=200)
+    colour = models.CharField(max_length=20)
+    summary = models.CharField(max_length=250)
+    fullday = models.BooleanField(default=False)
+
+    def values(self):
+        out = {
+            'name' : self.name,
+            'session_id' : self.session_id,
+            'token' : self.token,
+            'start_date' : self.start_date,
+            'end_date' : self.end_date,
+            'colour' : self.colour,
+            'summary' : self.summary,
+            'fullday' : self.fullday,
+        }
+        return out

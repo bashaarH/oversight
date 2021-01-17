@@ -16,6 +16,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 import datetime
 import pycronofy
+from opentok import OpenTok
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
 
@@ -215,3 +216,23 @@ def get_outlook_calendar_events():
     return (upcoming)
 
 
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def add_meeting(request):
+
+    api_key = "47084204"  # Replace with your OpenTok API key.
+    api_secret = "3e487ed7f77e32f86f561244ee1571618a485458"  # Replace with your OpenTok API secret.
+
+    data = request.data
+
+    opentok = OpenTok(api_key, api_secret)
+    session = opentok.create_session()
+    session_id = session.session_id
+    token = opentok.generate_token(session_id)
+
+    meeting = Meeting(name=data['name'], session_id=session_id, token=token,
+                      start_date=data['start_date'], end_date=data['end_date'],
+                      colour=data['colour'], summary=data['summary'], fullday=data['fullday'])
+    meeting.save()
+    return Response(meeting.values())

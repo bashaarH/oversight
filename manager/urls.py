@@ -16,4 +16,5 @@ urlpatterns = [
     path('archivework/', views.archive_work_tasks),
     path('deletework/', views.delete_work_tasks),
     path('updatework/', views.update_work_tasks),
+    path('addmeeting/', views.add_meeting),
 ]
