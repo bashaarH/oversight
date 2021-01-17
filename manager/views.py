@@ -255,9 +255,9 @@ def get_meeting(request):
     token = meetings[0].token
     data = {'session':session, 'token':token}
 
-    template = loader.get_template('C:/Users/Bashaar/Documents/north/powercell/manager/templates/index.html')
+    #template = loader.get_template('manager/templates/index.html')
 
-    return HttpResponse(template.render(data, request))
+    return render( request,'index.html', data )
 
 
 @api_view(['POST'])

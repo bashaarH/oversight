@@ -1,0 +1,144 @@
+<html>
+<head>
+    <title> Video Call </title>
+
+    <script src="https://static.opentok.com/v2/js/opentok.min.js"></script>
+</head>
+<body>
+    <style>
+    body, html {
+        background-color: gray;
+        height: 100%;
+    }
+
+    #videos {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    #subscriber {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 10;
+    }
+
+    #publisher {
+        position: absolute;
+        width: 360px;
+        height: 240px;
+        bottom: 10px;
+        left: 10px;
+        z-index: 100;
+        border: 3px solid white;
+        border-radius: 3px;
+    }
+
+    </style>
+
+
+    <div id="videos">
+        <div id="subscriber"></div>
+        <div id="publisher"></div>
+    </div>
+
+    <div id = 'session'>
+      {{session}}
+    </div>
+    <div id = 'token'>
+      {{token}}
+    </div>
+
+    <script>
+    // replace these values with those generated in your TokBox Account
+    var apiKey = "47084204";
+    var sessionId = "2_MX40NzA4NDIwNH5-MTYxMDg3MjM3MDY1MX5JemF4TWtrd3BOVjhMeXd4SVdwNzE3TkZ-UH4";
+    var token = "T1==cGFydG5lcl9pZD00NzA4NDIwNCZzaWc9MmRjZjMxYjMzYjMyNDhmYTlkZDVjMjdjOGQ4MzcxYTZjODU0NzZiOTpzZXNzaW9uX2lkPTJfTVg0ME56QTROREl3Tkg1LU1UWXhNRGczTWpNM01EWTFNWDVKZW1GNFRXdHJkM0JPVmpoTWVYZDRTVmR3TnpFM1RrWi1VSDQmY3JlYXRlX3RpbWU9MTYxMDg3MjM3MSZleHBpcmVfdGltZT0xNjEwOTU4NzcxJnJvbGU9cHVibGlzaGVyJm5vbmNlPTQ0NDIyOCZpbml0aWFsX2xheW91dF9jbGFzc19saXN0PQ==";
+
+    // Handling all of our errors here by alerting them
+    function handleError(error) {
+      if (error) {
+        alert(error.message);
+      }
+    }
+
+    // (optional) add server code here
+    initializeSession();
+
+    function initializeSession() {
+      var session = OT.initSession(apiKey, sessionId);
+
+      // Subscribe to a newly created stream
+      session.on('streamCreated', function(event) {
+        session.subscribe(event.stream, 'subscriber', {
+          insertMode: 'append',
+          width: '100%',
+          height: '100%'
+        }, handleError);
+      });
+
+      // Create a publisher
+      var publisher = OT.initPublisher('publisher', {
+        insertMode: 'append',
+        width: '100%',
+        height: '100%'
+      }, handleError);
+
+      // Connect to the session
+      session.connect(token, function(error) {
+        // If the connection is successful, publish to the session
+        if (error) {
+          handleError(error);
+        } else {
+          session.publish(publisher, handleError);
+        }
+      });
+    }
+
+    function connect() {
+      // Replace apiKey and sessionId with your own values:
+      session = OT.initSession(apiKey, sessionId);
+      session.on({
+        connectionCreated: function (event) {
+          connectionCount++;
+          console.log(connectionCount + ' connections.');
+        },
+        connectionDestroyed: function (event) {
+          connectionCount--;
+          console.log(connectionCount + ' connections.');
+        },
+        sessionDisconnected: function sessionDisconnectHandler(event) {
+          // The event is defined by the SessionDisconnectEvent class
+          console.log('Disconnected from the session.');
+          document.getElementById('disconnectBtn').style.display = 'none';
+          if (event.reason == 'networkDisconnected') {
+            alert('Your network connection terminated.')
+          }
+        }
+      });
+      // Replace token with your own value:
+      session.connect(token, function(error) {
+        if (error) {
+          console.log('Unable to connect: ', error.message);
+        } else {
+          document.getElementById('disconnectBtn').style.display = 'block';
+          console.log('Connected to the session.');
+          connectionCount = 1;
+        }
+      });
+    }
+
+    function disconnect() {
+      session.disconnect();
+    }
+
+    </script>
+
+
+</body>
+</html>
