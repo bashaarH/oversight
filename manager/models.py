@@ -72,3 +72,18 @@ class Meeting(models.Model):
             'fullday' : self.fullday,
         }
         return out
+
+class Reminder(models.Model):
+    name = models.CharField(max_length=150)
+    date = models.CharField(max_length=200)
+    message = models.CharField(max_length=250)
+    uid = models.CharField(max_length=25)
+
+    def values(self):
+        out = {
+            'name' : self.name,
+            'date' : self.date,
+            'message' : self.message,
+            'uid' : self.uid
+        }
+        return out

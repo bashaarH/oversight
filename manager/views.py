@@ -240,3 +240,37 @@ def add_meeting(request):
                       colour=data['colour'], summary=data['summary'], fullday=data['fullday'])
     meeting.save()
     return Response(meeting.values())
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def get_meeting(request):
+    meetings = Meeting.objects.all()
+    output = []
+    for m in meetings:
+        output.append(m.values())
+
+    return Response(output)
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def add_reminder(request):
+
+    data = request.data
+
+    reminder = Reminder(name=data['name'], date=data['date'], message=data['message'], uid=data['uid'])
+
+    reminder.save()
+    return Response(reminder.values())
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def get_reminder(request):
+    reminders = Reminder.objects.all()
+    output = []
+    for r in reminders:
+        output.append(r.values())
+
+    return Response(output)
